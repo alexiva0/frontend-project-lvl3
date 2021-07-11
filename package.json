@@ -1,0 +1,53 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "RSS aggregator",
+  "scripts": {
+    "start": "webpack serve",
+    "build": "BUILD_MODE=production webpack",
+    "test": "jest --coverage",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexiva0/frontend-project-lvl3.git"
+  },
+  "keywords": [
+    "RSS",
+    "aggregator",
+    "DOM",
+    "API"
+  ],
+  "author": "Alex Ivanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexiva0/frontend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/alexiva0/frontend-project-lvl3#readme",
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest-setup.js"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@testing-library/jest-dom": "^5.14.1",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^27.0.6",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.29.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.3.6",
+    "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.0.6",
+    "jest-cli": "^27.0.6",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
