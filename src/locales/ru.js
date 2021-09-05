@@ -6,5 +6,9 @@ export default {
       networkError: 'Ошибка соединения',
       parseError: 'Ошибка парсинга документа RSS',
     },
+    headers: {
+      feedsHeader: 'Фиды',
+      postsHeader: 'Посты',
+    },
   },
 };

@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import i18next from 'i18next';
 
-import { FORM_STATES } from './helpers/constants';
+import { FORM_STATES } from '../helpers/constants';
 
 const renderFormError = (formEl, error) => {
   const inputEl = formEl.querySelector('.form-control');
@@ -78,18 +78,4 @@ const watchFormState = (formState) => {
   return watchedFormState;
 };
 
-const watchFeedsState = (feeds) => {
-  const watchedFeeds = onChange(feeds, (_, value) => {
-    console.log(value);
-  });
-  return watchedFeeds;
-};
-
-const watchPostsState = (posts) => {
-  const watchedPosts = onChange(posts, (_, value) => {
-    console.log(value);
-  });
-  return watchedPosts;
-};
-
-export { watchFormState, watchFeedsState, watchPostsState };
+export default watchFormState;

@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { watchFormState, watchFeedsState, watchPostsState } from './view';
+import { watchFormState, watchFeedsState, watchPostsState } from './views';
 import getFeedData from './service';
 
 import { FORM_STATES } from './helpers/constants';
