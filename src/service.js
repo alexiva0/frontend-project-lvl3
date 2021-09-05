@@ -23,7 +23,7 @@ const parseFeedResponse = (feedResponse, feedUrl) => {
   const feedId = generateFeedId();
   const parser = new DOMParser();
   const feedXML = parser.parseFromString(
-    feedUrl === 'https://ru.hexlet.io/lessons.rss' ? '<warning>Beware of the missing closing tag' : feedResponse.data.contents,
+    feedResponse.data.contents,
     'application/xml',
   );
   const posts = Array.from(feedXML.querySelectorAll('item')).map((item) => ({
@@ -48,9 +48,7 @@ const parseFeedResponse = (feedResponse, feedUrl) => {
 
 const getFeedData = (feedUrl) => axios
   .get(getUrlWithProxy(feedUrl))
-  .then((feedResponse) => {
-    parseFeedResponse(feedResponse, feedUrl);
-  })
+  .then((feedResponse) => parseFeedResponse(feedResponse, feedUrl))
   .catch((err) => {
     if (err.message.includes(NETWORK_ERROR_MSG)) {
       throw new Error('errors.networkError');
