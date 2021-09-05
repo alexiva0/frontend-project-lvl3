@@ -1,31 +1,39 @@
 import * as yup from 'yup';
-import { watchFormState, watchFeedUrlsState } from './view';
+import { watchFormState, watchFeedsState, watchPostsState } from './view';
+import getFeedData from './service';
 
-const createValidationSchema = (feedUrls) => yup
+import { FORM_STATES } from './helpers/constants';
+
+const createValidationSchema = (feeds) => yup
   .object()
   .shape({
     url: yup
       .string()
-      .url('Ссылка должна быть валидным URL')
+      .url()
       .required()
-      .test('Unique', 'RSS уже существует', (value) => !feedUrls.includes(value)),
+      .test('uniqueUrl', 'errors.notUnique', (value) => !feeds.find(({ url }) => url === value)),
   });
 
 const app = () => {
   const state = {
-    feedUrls: [],
+    feeds: [],
+    posts: [],
     form: {
       error: null,
+      state: FORM_STATES.filling,
     },
   };
 
   const watchedFormState = watchFormState(state.form);
-  const watchedFeedUrls = watchFeedUrlsState(state.feedUrls);
+  const watchedFeeds = watchFeedsState(state.feeds);
+  const watchedPosts = watchPostsState(state.posts);
 
-  const schema = createValidationSchema(state.feedUrls);
+  const schema = createValidationSchema(state.feeds);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
+    watchedFormState.state = FORM_STATES.sending;
 
     const formData = new FormData(e.target);
     const url = formData.get('url');
@@ -34,10 +42,16 @@ const app = () => {
       .validate({ url })
       .then(() => {
         watchedFormState.error = null;
-        watchedFeedUrls.push(url);
+        return getFeedData(url);
+      })
+      .then(({ feed, posts }) => {
+        watchedFeeds.push(feed);
+        watchedPosts.unshift(...posts);
+        watchedFormState.state = FORM_STATES.filling;
       })
       .catch((error) => {
         watchedFormState.error = error;
+        watchedFormState.state = FORM_STATES.failed;
       });
   };
 
