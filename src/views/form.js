@@ -55,7 +55,7 @@ const handleFormStateChange = (processState, formState, formEl) => {
 const watchFormState = (formState) => {
   const formEl = document.querySelector('form');
 
-  const watchedFormState = onChange(formState, function (path, value) {
+  const watchedFormState = onChange(formState, function onChangeHandler(path, value) {
     if (path === 'processState') {
       handleFormStateChange(value, this, formEl);
     }
