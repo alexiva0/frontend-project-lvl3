@@ -1,6 +1,8 @@
 export default {
   translation: {
+    successMsg: 'RSS успешно загружен',
     errors: {
+      default: 'Произошла ошибка',
       notValidUrl: 'Ссылка должна быть валидным URL',
       notUnique: 'RSS уже существует',
       networkError: 'Ошибка соединения',

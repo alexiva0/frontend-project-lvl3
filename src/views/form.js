@@ -3,51 +3,46 @@ import i18next from 'i18next';
 
 import { FORM_STATES } from '../helpers/constants';
 
-const renderFormError = (formEl, error) => {
-  const inputEl = formEl.querySelector('.form-control');
-  const errMsg = i18next.t(error.message);
-  const inputContainerEl = formEl.querySelector('.input-container');
-  const invalidFeedbackEl = document.createElement('div');
-  invalidFeedbackEl.classList.add('invalid-feedback');
-  invalidFeedbackEl.textContent = errMsg;
-  inputContainerEl.append(invalidFeedbackEl);
+const renderErrorMessage = (inputEl, feedbackEl, error) => {
+  const errMsg = error?.message ?? 'errors.default';
+
   inputEl.classList.add('is-invalid');
+  feedbackEl.classList.add('text-danger');
+  feedbackEl.textContent = i18next.t(errMsg);
 };
 
-const cleanFormError = (formEl) => {
-  const inputEl = formEl.querySelector('.form-control');
-  const invalidFeedbackEl = formEl.querySelector('.invalid-feedback');
+const renderSuccessMessage = (feedbackEl) => {
+  feedbackEl.classList.add('text-success');
+  feedbackEl.textContent = i18next.t('successMsg');
+};
 
-  if (invalidFeedbackEl) {
-    invalidFeedbackEl.remove();
-  }
+const cleanFormMessage = (inputEl, feedbackEl) => {
+  feedbackEl.classList.remove('text-success');
+  feedbackEl.classList.remove('text-danger');
+  feedbackEl.textContent = '';
   inputEl.classList.remove('is-invalid');
 };
 
-const handleFormErrorStateChange = (error, formEl) => {
-  if (error) {
-    renderFormError(formEl, error);
-  } else {
-    cleanFormError(formEl);
-  }
-};
-
-const handleFormStateChange = (formState, formEl) => {
-  const inputEl = formEl.querySelector('.form-control');
+const handleFormStateChange = (processState, formState, formEl) => {
+  const inputEl = formEl.querySelector('#url-input');
   const submitButtonEl = formEl.querySelector('button[type="submit"]');
+  const feedbackEl = document.querySelector('.feedback-container');
 
-  switch (formState) {
-    case FORM_STATES.filling:
+  switch (processState) {
+    case FORM_STATES.sending:
+      cleanFormMessage(inputEl, feedbackEl);
+      submitButtonEl.disabled = true;
+      break;
+
+    case FORM_STATES.success:
+      renderSuccessMessage(feedbackEl);
       submitButtonEl.disabled = false;
       formEl.reset();
       inputEl.focus();
       break;
 
-    case FORM_STATES.sending:
-      submitButtonEl.disabled = true;
-      break;
-
     case FORM_STATES.failed:
+      renderErrorMessage(inputEl, feedbackEl, formState.error);
       submitButtonEl.disabled = false;
       inputEl.focus();
       break;
@@ -60,18 +55,9 @@ const handleFormStateChange = (formState, formEl) => {
 const watchFormState = (formState) => {
   const formEl = document.querySelector('form');
 
-  const watchedFormState = onChange(formState, (path, value) => {
-    switch (path) {
-      case 'error':
-        handleFormErrorStateChange(value, formEl);
-        break;
-
-      case 'state':
-        handleFormStateChange(value, formEl);
-        break;
-
-      default:
-        break;
+  const watchedFormState = onChange(formState, function (path, value) {
+    if (path === 'processState') {
+      handleFormStateChange(value, this, formEl);
     }
   });
 

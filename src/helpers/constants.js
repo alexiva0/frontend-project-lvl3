@@ -1,6 +1,7 @@
 const FORM_STATES = {
   filling: 'FILLING',
   sending: 'SENDING',
+  success: 'SUCCESS',
   failed: 'FAILED',
 };
 

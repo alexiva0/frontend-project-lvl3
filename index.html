@@ -9,28 +9,34 @@
   <body class="d-flex flex-column min-vh-100">
     <main class="flex-grow-1">
       <section class="form-container container-fluid bg-dark p-5">
-        <form class="row">
-          <div class="col">
-            <div class="input-container form-floating">
-              <input
-                autofocus
-                required
-                autocomplete="off"
-                aria-label="url"
-                class="form-control"
-                placeholder="Ссылка RSS"
-                id="url-input"
-                name="url"
-              />
-              <label for="url-input">Ссылка RSS</label>
-            </div>
+        <div class="row">
+          <div class="col-md-10 col-lg-8 mx-auto text-white">
+            <h1 class="display-3 mb-0">RSS агрегатор</h1>
+            <form class="rss-form text-body">
+              <div class="row">
+                <div class="col">
+                  <div class="form-floating">
+                    <input
+                      autofocus
+                      required
+                      autocomplete="off"
+                      aria-label="url"
+                      placeholder="Ссылка RSS"
+                      id="url-input"
+                      class="form-control w-100"
+                      name="url"
+                    />
+                    <label for="url-input">Ссылка RSS</label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" aria-label="add" class="h-100 btn btn-lg btn-primary px-sm-5">Добавить</button>
+                </div>
+              </div>
+            </form>
+            <p class="feedback-container m-0 position-absolute small text-danger"></p>
           </div>
-          <div class="col-auto">
-            <button type="submit" class="btn btn-lg btn-primary h-100">
-              Добавить
-            </button>
-          </div>
-        </form>
+        </div>
       </section>
       <section class="feed-container container-fluid container-xxl p-5">
         <div class="row">

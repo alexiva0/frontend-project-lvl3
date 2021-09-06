@@ -20,7 +20,7 @@ const app = () => {
     posts: [],
     form: {
       error: null,
-      state: FORM_STATES.filling,
+      processState: FORM_STATES.filling,
     },
   };
 
@@ -33,7 +33,7 @@ const app = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    watchedFormState.state = FORM_STATES.sending;
+    watchedFormState.processState = FORM_STATES.sending;
 
     const formData = new FormData(e.target);
     const url = formData.get('url');
@@ -47,15 +47,15 @@ const app = () => {
       .then(({ feed, posts }) => {
         watchedFeeds.push(feed);
         watchedPosts.unshift(...posts);
-        watchedFormState.state = FORM_STATES.filling;
+        watchedFormState.processState = FORM_STATES.success;
       })
       .catch((error) => {
         watchedFormState.error = error;
-        watchedFormState.state = FORM_STATES.failed;
+        watchedFormState.processState = FORM_STATES.failed;
       });
   };
 
-  const formEl = document.querySelector('form');
+  const formEl = document.querySelector('.rss-form');
 
   formEl.addEventListener('submit', handleFormSubmit);
 };
