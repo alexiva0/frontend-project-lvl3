@@ -14,27 +14,28 @@ const createValidationSchema = (feeds) => yup
       .test('uniqueUrl', 'errors.notUnique', (value) => !feeds.find(({ url }) => url === value)),
   });
 
-const subscribeToFeed = ({
-  feedUrl, watchedFeeds, watchedPosts, watchedFormState,
-}) => {
-  const updateFeedData = () => {
-    getFeedData(feedUrl)
-      .then(({ feed, posts }) => {
-        watchedFeeds.push(feed);
-        watchedPosts.unshift(...posts);
-        watchedFormState.processState = FORM_STATES.success;
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          updateFeedData(feedUrl, watchedFeeds, watchedPosts, watchedFormState);
-        }, 5000);
-      });
+const subscribeToNewPosts = (feedUrl, watchedPosts) => {
+  const updatePosts = () => {
+    setTimeout(() => {
+      getFeedData(feedUrl)
+        .then(({ posts }) => {
+          const newPosts = posts
+            .filter((fetchedPost) => !watchedPosts.find(
+              (existingPost) => existingPost.guid === fetchedPost.guid,
+            ));
+
+          watchedPosts.unshift(...newPosts);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          updatePosts();
+        });
+    }, 5000);
   };
 
-  updateFeedData();
+  updatePosts();
 };
 
 const app = () => {
@@ -51,7 +52,7 @@ const app = () => {
   const watchedFeeds = watchFeedsState(state.feeds);
   const watchedPosts = watchPostsState(state.posts);
 
-  const schema = createValidationSchema(state.feeds);
+  const schema = createValidationSchema(watchedFeeds);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -65,12 +66,14 @@ const app = () => {
       .validate({ url })
       .then(() => {
         watchedFormState.error = null;
-        subscribeToFeed({
-          feedUrl: url,
-          watchedFeeds,
-          watchedPosts,
-          watchedFormState,
-        });
+        return getFeedData(url);
+      })
+      .then(({ feed, posts }) => {
+        watchedFormState.processState = FORM_STATES.success;
+        watchedFeeds.push(feed);
+        watchedPosts.unshift(...posts);
+
+        subscribeToNewPosts(url, watchedPosts);
       })
       .catch((error) => {
         watchedFormState.error = error;

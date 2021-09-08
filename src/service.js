@@ -29,6 +29,7 @@ const parseFeedResponse = (feedResponse, feedUrl) => {
   const posts = Array.from(feedXML.querySelectorAll('item')).map((item) => ({
     feedId,
     id: generatePostId(),
+    guid: item.querySelector('guid').textContent,
     title: item.querySelector('title').textContent,
     link: item.querySelector('link').textContent,
   }));
