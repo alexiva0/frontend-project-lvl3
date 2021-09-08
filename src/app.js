@@ -14,6 +14,29 @@ const createValidationSchema = (feeds) => yup
       .test('uniqueUrl', 'errors.notUnique', (value) => !feeds.find(({ url }) => url === value)),
   });
 
+const subscribeToFeed = ({
+  feedUrl, watchedFeeds, watchedPosts, watchedFormState,
+}) => {
+  const updateFeedData = () => {
+    getFeedData(feedUrl)
+      .then(({ feed, posts }) => {
+        watchedFeeds.push(feed);
+        watchedPosts.unshift(...posts);
+        watchedFormState.processState = FORM_STATES.success;
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          updateFeedData(feedUrl, watchedFeeds, watchedPosts, watchedFormState);
+        }, 5000);
+      });
+  };
+
+  updateFeedData();
+};
+
 const app = () => {
   const state = {
     feeds: [],
@@ -36,18 +59,18 @@ const app = () => {
     watchedFormState.processState = FORM_STATES.sending;
 
     const formData = new FormData(e.target);
-    const url = formData.get('url');
+    const url = formData.get('url').trim();
 
     schema
       .validate({ url })
       .then(() => {
         watchedFormState.error = null;
-        return getFeedData(url);
-      })
-      .then(({ feed, posts }) => {
-        watchedFeeds.push(feed);
-        watchedPosts.unshift(...posts);
-        watchedFormState.processState = FORM_STATES.success;
+        subscribeToFeed({
+          feedUrl: url,
+          watchedFeeds,
+          watchedPosts,
+          watchedFormState,
+        });
       })
       .catch((error) => {
         watchedFormState.error = error;
