@@ -7,6 +7,9 @@ love:
 build:
 	npm run build
 
+rebuild:
+	rm -rf dist && npm run build
+
 lint:
 	npm run lint
 
