@@ -7,6 +7,7 @@ import {
   PROXY_DISABLE_CACHE_SEARCH_PARAM,
   NETWORK_ERROR_MSG,
   PARSING_ERROR_MSG,
+  NOT_RSS_ERROR_MSG,
 } from './helpers/constants';
 
 const generateFeedId = createIdGenerator();
@@ -57,7 +58,7 @@ const getFeedData = (feedUrl) => axios
       throw new Error('errors.networkError');
     }
 
-    if (err.message.includes(PARSING_ERROR_MSG)) {
+    if (err.message.includes(PARSING_ERROR_MSG) || err.message.includes(NOT_RSS_ERROR_MSG)) {
       throw new Error('errors.parseError');
     }
 

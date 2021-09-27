@@ -10,7 +10,4 @@ build:
 lint:
 	npm run lint
 
-test:
-	npm test
-
-.PHONY: install love lint test build
+.PHONY: install love lint build
