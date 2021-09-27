@@ -108,9 +108,9 @@ const app = () => {
   const modalEl = document.querySelector('.modal');
   const postsContainerEl = document.querySelector('.posts');
 
-  formEl.addEventListener('submit', handleFormSubmit);
-  modalEl.addEventListener('show.bs.modal', handleModalOpen);
-  postsContainerEl.addEventListener('click', handlePostClick);
+  formEl?.addEventListener('submit', handleFormSubmit);
+  modalEl?.addEventListener('show.bs.modal', handleModalOpen);
+  postsContainerEl?.addEventListener('click', handlePostClick);
 };
 
 export default app;
