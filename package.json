@@ -4,7 +4,7 @@
   "description": "RSS aggregator",
   "scripts": {
     "start": "webpack serve",
-    "build": "BUILD_MODE=production webpack",
+    "build": "NODE_ENV=production webpack",
     "lint": "eslint ."
   },
   "repository": {

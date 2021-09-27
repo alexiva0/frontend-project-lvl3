@@ -1,10 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const mode = process.env.BUILD_MODE || 'development';
-
 module.exports = {
   entry: './src/index.js',
-  mode,
+  output: {
+    filename: 'index.js',
+  },
+  mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
       {
