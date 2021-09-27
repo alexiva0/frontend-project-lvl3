@@ -32,6 +32,7 @@ const parseFeedResponse = (feedResponse, feedUrl) => {
     guid: item.querySelector('guid').textContent,
     title: item.querySelector('title').textContent,
     link: item.querySelector('link').textContent,
+    description: item.querySelector('description').textContent,
   }));
 
   const feed = {
@@ -39,6 +40,7 @@ const parseFeedResponse = (feedResponse, feedUrl) => {
     url: feedUrl,
     title: feedXML.querySelector('title').textContent,
     description: feedXML.querySelector('description').textContent,
+    visited: false,
   };
 
   return {

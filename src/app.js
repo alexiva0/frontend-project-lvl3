@@ -14,17 +14,17 @@ const createValidationSchema = (feeds) => yup
       .test('uniqueUrl', 'errors.notUnique', (value) => !feeds.find(({ url }) => url === value)),
   });
 
-const subscribeToNewPosts = (feedUrl, watchedPosts) => {
+const subscribeToNewPosts = (feedUrl, postsList) => {
   const updatePosts = () => {
     setTimeout(() => {
       getFeedData(feedUrl)
         .then(({ posts }) => {
           const newPosts = posts
-            .filter((fetchedPost) => !watchedPosts.find(
+            .filter((fetchedPost) => !postsList.find(
               (existingPost) => existingPost.guid === fetchedPost.guid,
             ));
 
-          watchedPosts.unshift(...newPosts);
+          postsList.unshift(...newPosts);
         })
         .catch((error) => {
           console.error(error);
@@ -38,10 +38,15 @@ const subscribeToNewPosts = (feedUrl, watchedPosts) => {
   updatePosts();
 };
 
+const getPostById = (posts, postId) => posts.find(({ id }) => id === Number(postId));
+
 const app = () => {
   const state = {
     feeds: [],
-    posts: [],
+    posts: {
+      list: [],
+      currentPost: null,
+    },
     form: {
       error: null,
       processState: FORM_STATES.filling,
@@ -71,9 +76,9 @@ const app = () => {
       .then(({ feed, posts }) => {
         watchedFormState.processState = FORM_STATES.success;
         watchedFeeds.push(feed);
-        watchedPosts.unshift(...posts);
+        watchedPosts.list.unshift(...posts);
 
-        subscribeToNewPosts(url, watchedPosts);
+        subscribeToNewPosts(url, watchedPosts.list);
       })
       .catch((error) => {
         watchedFormState.error = error;
@@ -81,9 +86,31 @@ const app = () => {
       });
   };
 
+  const handleModalOpen = (e) => {
+    const postId = e.relatedTarget?.dataset?.id;
+
+    if (postId) {
+      const post = getPostById(watchedPosts.list, postId);
+      watchedPosts.currentPost = post;
+    }
+  };
+
+  const handlePostClick = (e) => {
+    const postId = e.target.dataset.id;
+
+    if (postId) {
+      const post = getPostById(watchedPosts.list, postId);
+      post.visited = true;
+    }
+  };
+
   const formEl = document.querySelector('.rss-form');
+  const modalEl = document.querySelector('.modal');
+  const postsContainerEl = document.querySelector('.posts');
 
   formEl.addEventListener('submit', handleFormSubmit);
+  modalEl.addEventListener('show.bs.modal', handleModalOpen);
+  postsContainerEl.addEventListener('click', handlePostClick);
 };
 
 export default app;

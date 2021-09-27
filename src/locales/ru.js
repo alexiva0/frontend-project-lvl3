@@ -1,6 +1,7 @@
 export default {
   translation: {
     successMsg: 'RSS успешно загружен',
+    postButton: 'Просмотр',
     errors: {
       default: 'Произошла ошибка',
       notValidUrl: 'Ссылка должна быть валидным URL',

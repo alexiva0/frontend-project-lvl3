@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/js/dist/modal';
 import i18next from 'i18next';
 import * as yup from 'yup';
 import app from './app';
