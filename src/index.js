@@ -2,9 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/js/dist/modal';
 import i18next from 'i18next';
 import * as yup from 'yup';
-import app from './src/app';
+import app from './app';
 
-import ru from './src/locales/ru';
+import ru from './locales/ru';
 
 const runApp = async () => {
   // Setup yup locale
