@@ -25,4 +25,4 @@ const runApp = async () => {
   app();
 };
 
-runApp();
+export default runApp;

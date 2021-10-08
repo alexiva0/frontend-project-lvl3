@@ -23,7 +23,7 @@
     "url": "https://github.com/alexiva0/frontend-project-lvl3/issues"
   },
   "homepage": "https://github.com/alexiva0/frontend-project-lvl3#readme",
-  "main": "src/app.js",
+  "main": "src/index.js",
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
