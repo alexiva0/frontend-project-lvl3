@@ -32,11 +32,13 @@ const handleFormStateChange = (processState, formState, formEl) => {
     case FORM_STATES.sending:
       cleanFormMessage(inputEl, feedbackEl);
       submitButtonEl.disabled = true;
+      inputEl.readOnly = true;
       break;
 
     case FORM_STATES.success:
       renderSuccessMessage(feedbackEl);
       submitButtonEl.disabled = false;
+      inputEl.readOnly = false;
       formEl.reset();
       inputEl.focus();
       break;
@@ -44,6 +46,7 @@ const handleFormStateChange = (processState, formState, formEl) => {
     case FORM_STATES.failed:
       renderErrorMessage(inputEl, feedbackEl, formState.error);
       submitButtonEl.disabled = false;
+      inputEl.readOnly = false;
       inputEl.focus();
       break;
 
