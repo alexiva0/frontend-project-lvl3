@@ -6,7 +6,7 @@ export default {
       default: 'Произошла ошибка',
       notValidUrl: 'Ссылка должна быть валидным URL',
       notUnique: 'RSS уже существует',
-      networkError: 'Ошибка соединения',
+      networkError: 'Ошибка сети',
       parseError: 'Ресурс не содержит валидный RSS',
     },
     headers: {
