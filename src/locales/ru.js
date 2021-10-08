@@ -7,7 +7,7 @@ export default {
       notValidUrl: 'Ссылка должна быть валидным URL',
       notUnique: 'RSS уже существует',
       networkError: 'Ошибка соединения',
-      parseError: 'Ошибка парсинга документа RSS',
+      parseError: 'Ресурс не содержит валидный RSS',
     },
     headers: {
       feedsHeader: 'Фиды',
