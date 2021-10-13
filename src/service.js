@@ -62,7 +62,7 @@ const getFeedData = (feedUrl) => axios
   })
   .then((feedResponse) => {
     const feedXML = parseFeed(feedResponse?.data?.contents);
-    return generateFeedData(feedXML);
+    return generateFeedData(feedXML, feedUrl);
   });
 
 export default getFeedData;
