@@ -6,23 +6,23 @@ import app from './app';
 
 import ru from './locales/ru';
 
-const runApp = async () => {
+const runApp = () => {
   // Setup yup locale
   yup.setLocale({
     string: { url: 'errors.notValidUrl' },
   });
 
   // Initialize localization
-  await i18next.init({
+  i18next.init({
     lng: 'ru',
     debug: true,
     resources: {
       ru,
     },
+  }).then(() => {
+    // Start the application
+    app();
   });
-
-  // Start the application
-  app();
 };
 
 export default runApp;
