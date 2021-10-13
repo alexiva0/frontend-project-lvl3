@@ -7,7 +7,6 @@ const createPostsListItemEl = ({
   title, link, id, visited,
 }) => {
   const listItemEl = document.createElement('li');
-  const linkClass = visited ? 'fw-normal link-secondary' : 'fw-bold';
   listItemEl.classList.add(
     'list-group-item',
     'd-flex',
@@ -16,18 +15,26 @@ const createPostsListItemEl = ({
     'border-0',
     'border-end-0',
   );
-  listItemEl.innerHTML = `
-    <a href="${link}" class="${linkClass}" data-id="${id}" target="_blank" rel="noopener noreferrer">${title}</a>
-    <button
-      type="button"
-      class="btn btn-outline-primary btn-sm"
-      data-id="${id}"
-      data-bs-toggle="modal"
-      data-bs-target="#postModal"
-    >
-      ${i18next.t('postButton')}
-    </button>
-  `;
+
+  const listItemLinkEl = document.createElement('a');
+  const linkClasses = visited ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
+  listItemLinkEl.classList.add(...linkClasses);
+  listItemLinkEl.setAttribute('data-id', id);
+  listItemLinkEl.href = link;
+  listItemLinkEl.target = '_blank';
+  listItemLinkEl.rel = 'noopener noreferrer';
+  listItemLinkEl.textContent = title;
+
+  const listItemButtonEl = document.createElement('button');
+  listItemButtonEl.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+  listItemButtonEl.setAttribute('data-id', id);
+  listItemButtonEl.setAttribute('data-bs-toggle', 'modal');
+  listItemButtonEl.setAttribute('data-bs-target', '#postModal');
+  listItemButtonEl.type = 'button';
+  listItemButtonEl.textContent = i18next.t('postButton');
+
+  listItemEl.append(listItemLinkEl, listItemButtonEl);
+
   return listItemEl;
 };
 
