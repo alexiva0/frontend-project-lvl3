@@ -10,6 +10,7 @@ const runApp = () => {
   // Setup yup locale
   yup.setLocale({
     string: { url: 'errors.notValidUrl' },
+    mixed: { notOneOf: 'errors.notUnique' },
   });
 
   // Initialize localization

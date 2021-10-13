@@ -11,7 +11,7 @@ const createValidationSchema = (feeds) => yup
       .string()
       .url()
       .required()
-      .test('uniqueUrl', 'errors.notUnique', (value) => !feeds.find(({ url }) => url === value)),
+      .notOneOf(feeds.map(({ url }) => url)),
   });
 
 const subscribeToNewPosts = (feedUrl, postsList) => {
@@ -57,13 +57,12 @@ const app = () => {
   const watchedFeeds = watchFeedsState(state.feeds);
   const watchedPosts = watchPostsState(state.posts);
 
-  const schema = createValidationSchema(watchedFeeds);
-
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
     watchedFormState.processState = FORM_STATES.sending;
 
+    const schema = createValidationSchema(watchedFeeds);
     const formData = new FormData(e.target);
     const url = formData.get('url').trim();
 
