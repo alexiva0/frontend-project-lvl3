@@ -17,38 +17,42 @@ const getUrlWithProxy = (feedUrl) => {
   return url.toString();
 };
 
-const parseFeedResponse = (feedResponse, feedUrl) => {
+const parseFeed = (feedString) => {
   try {
-    const feedId = generateFeedId();
     const parser = new DOMParser();
-    const feedXML = parser.parseFromString(
-      feedResponse.data.contents,
+    return parser.parseFromString(
+      feedString,
       'application/xml',
     );
-    const posts = Array.from(feedXML.querySelectorAll('item')).map((item) => ({
-      feedId,
-      id: generatePostId(),
-      guid: item.querySelector('guid').textContent,
-      title: item.querySelector('title').textContent,
-      link: item.querySelector('link').textContent,
-      description: item.querySelector('description').textContent,
-    }));
-
-    const feed = {
-      id: feedId,
-      url: feedUrl,
-      title: feedXML.querySelector('title').textContent,
-      description: feedXML.querySelector('description').textContent,
-      visited: false,
-    };
-
-    return {
-      feed,
-      posts,
-    };
   } catch (_) {
     throw new Error('errors.parseError');
   }
+};
+
+const generateFeedData = (feedXML, feedUrl) => {
+  const feedId = generateFeedId();
+
+  const posts = Array.from(feedXML.querySelectorAll('item')).map((item) => ({
+    feedId,
+    id: generatePostId(),
+    guid: item.querySelector('guid').textContent,
+    title: item.querySelector('title').textContent,
+    link: item.querySelector('link').textContent,
+    description: item.querySelector('description').textContent,
+  }));
+
+  const feed = {
+    id: feedId,
+    url: feedUrl,
+    title: feedXML.querySelector('title').textContent,
+    description: feedXML.querySelector('description').textContent,
+    visited: false,
+  };
+
+  return {
+    feed,
+    posts,
+  };
 };
 
 const getFeedData = (feedUrl) => axios
@@ -56,6 +60,9 @@ const getFeedData = (feedUrl) => axios
   .catch(() => {
     throw new Error('errors.networkError');
   })
-  .then((feedResponse) => parseFeedResponse(feedResponse, feedUrl));
+  .then((feedResponse) => {
+    const feedXML = parseFeed(feedResponse?.data?.contents);
+    return generateFeedData(feedXML);
+  });
 
 export default getFeedData;
