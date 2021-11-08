@@ -21,7 +21,7 @@ const subscribeToNewPosts = (feedUrl, postsList) => {
         .then(({ posts }) => {
           const newPosts = posts
             .filter((fetchedPost) => !postsList.find(
-              (existingPost) => existingPost.guid === fetchedPost.guid,
+              (existingPost) => existingPost.link === fetchedPost.link,
             ));
 
           postsList.unshift(...newPosts);

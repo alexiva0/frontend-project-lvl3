@@ -19,7 +19,6 @@ const getUrlWithProxy = (feedUrl) => {
 
 const parseFeedXml = (feedXML) => {
   const posts = Array.from(feedXML.querySelectorAll('item')).map((item) => ({
-    guid: item.querySelector('guid').textContent,
     title: item.querySelector('title').textContent,
     link: item.querySelector('link').textContent,
     description: item.querySelector('description').textContent,
