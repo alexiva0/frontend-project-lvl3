@@ -40,7 +40,7 @@ const subscribeToNewPosts = (feedUrl, postsList) => {
 
 const getPostById = (posts, postId) => posts.find(({ id }) => id === Number(postId));
 
-const app = () => {
+const app = (i18nextInstance) => {
   const state = {
     feeds: [],
     posts: {
@@ -53,9 +53,9 @@ const app = () => {
     },
   };
 
-  const watchedFormState = watchFormState(state.form);
-  const watchedFeeds = watchFeedsState(state.feeds);
-  const watchedPosts = watchPostsState(state.posts);
+  const watchedFormState = watchFormState(state.form, i18nextInstance);
+  const watchedFeeds = watchFeedsState(state.feeds, i18nextInstance);
+  const watchedPosts = watchPostsState(state.posts, i18nextInstance);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();

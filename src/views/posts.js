@@ -1,9 +1,8 @@
 import onChange from 'on-change';
-import i18next from 'i18next';
 
 import { createHeader, createList } from './common';
 
-const createPostsListItemEl = ({
+const createPostsListItemGenerator = (i18nextInstance) => ({
   title, link, id, visited,
 }) => {
   const listItemEl = document.createElement('li');
@@ -31,17 +30,17 @@ const createPostsListItemEl = ({
   listItemButtonEl.setAttribute('data-bs-toggle', 'modal');
   listItemButtonEl.setAttribute('data-bs-target', '#postModal');
   listItemButtonEl.type = 'button';
-  listItemButtonEl.textContent = i18next.t('postButton');
+  listItemButtonEl.textContent = i18nextInstance.t('postButton');
 
   listItemEl.append(listItemLinkEl, listItemButtonEl);
 
   return listItemEl;
 };
 
-const renderPosts = (postsList) => {
+const renderPosts = (postsList, i18nextInstance) => {
   const postsContainerEl = document.querySelector('.posts');
-  const headerEl = createHeader(i18next.t('headers.postsHeader'));
-  const postsListEl = createList(postsList, createPostsListItemEl);
+  const headerEl = createHeader(i18nextInstance.t('headers.postsHeader'));
+  const postsListEl = createList(postsList, createPostsListItemGenerator(i18nextInstance));
 
   postsContainerEl.innerHTML = '';
   postsContainerEl.append(headerEl);
@@ -59,7 +58,7 @@ const updateModalContent = (post) => {
   modalLinkEl.href = post.link;
 };
 
-const watchPostsState = (posts) => {
+const watchPostsState = (posts, i18nextInstance) => {
   const watchedPosts = onChange(posts, function onChangeHandler(path, value) {
     switch (path) {
       case 'currentPost':
@@ -68,7 +67,7 @@ const watchPostsState = (posts) => {
 
       // Any changes other than currentPostId value should trigger posts list rerender
       default:
-        renderPosts(this.list);
+        renderPosts(this.list, i18nextInstance);
         break;
     }
   });

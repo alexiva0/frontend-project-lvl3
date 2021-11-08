@@ -14,15 +14,15 @@ const runApp = () => {
   });
 
   // Initialize localization
-  i18next.init({
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance.init({
     lng: 'ru',
-    debug: true,
     resources: {
       ru,
     },
   }).then(() => {
     // Start the application
-    app();
+    app(i18nextInstance);
   });
 };
 

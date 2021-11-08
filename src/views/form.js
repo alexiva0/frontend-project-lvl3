@@ -1,19 +1,18 @@
 import onChange from 'on-change';
-import i18next from 'i18next';
 
 import { FORM_STATES } from '../helpers/constants';
 
-const renderErrorMessage = (inputEl, feedbackEl, error) => {
+const renderErrorMessage = (inputEl, feedbackEl, error, i18nextInstance) => {
   const errMsg = error?.message ?? 'errors.default';
 
   inputEl.classList.add('is-invalid');
   feedbackEl.classList.add('text-danger');
-  feedbackEl.textContent = i18next.t(errMsg);
+  feedbackEl.textContent = i18nextInstance.t(errMsg);
 };
 
-const renderSuccessMessage = (feedbackEl) => {
+const renderSuccessMessage = (feedbackEl, i18nextInstance) => {
   feedbackEl.classList.add('text-success');
-  feedbackEl.textContent = i18next.t('successMsg');
+  feedbackEl.textContent = i18nextInstance.t('successMsg');
 };
 
 const cleanFormMessage = (inputEl, feedbackEl) => {
@@ -23,7 +22,7 @@ const cleanFormMessage = (inputEl, feedbackEl) => {
   inputEl.classList.remove('is-invalid');
 };
 
-const handleFormStateChange = (processState, formState, formEl) => {
+const handleFormStateChange = (processState, formState, formEl, i18nextInstance) => {
   const inputEl = formEl.querySelector('#url-input');
   const submitButtonEl = formEl.querySelector('button[type="submit"]');
   const feedbackEl = document.querySelector('.feedback-container');
@@ -36,7 +35,7 @@ const handleFormStateChange = (processState, formState, formEl) => {
       break;
 
     case FORM_STATES.success:
-      renderSuccessMessage(feedbackEl);
+      renderSuccessMessage(feedbackEl, i18nextInstance);
       submitButtonEl.disabled = false;
       inputEl.readOnly = false;
       formEl.reset();
@@ -44,7 +43,7 @@ const handleFormStateChange = (processState, formState, formEl) => {
       break;
 
     case FORM_STATES.failed:
-      renderErrorMessage(inputEl, feedbackEl, formState.error);
+      renderErrorMessage(inputEl, feedbackEl, formState.error, i18nextInstance);
       submitButtonEl.disabled = false;
       inputEl.readOnly = false;
       inputEl.focus();
@@ -55,12 +54,12 @@ const handleFormStateChange = (processState, formState, formEl) => {
   }
 };
 
-const watchFormState = (formState) => {
+const watchFormState = (formState, i18nextInstance) => {
   const formEl = document.querySelector('form');
 
   const watchedFormState = onChange(formState, function onChangeHandler(path, value) {
     if (path === 'processState') {
-      handleFormStateChange(value, this, formEl);
+      handleFormStateChange(value, this, formEl, i18nextInstance);
     }
   });
 

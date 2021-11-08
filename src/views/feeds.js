@@ -1,5 +1,4 @@
 import onChange from 'on-change';
-import i18next from 'i18next';
 
 import { createHeader, createList } from './common';
 
@@ -20,9 +19,9 @@ const createFeedsListItemEl = ({ title, description }) => {
   return listItemEl;
 };
 
-const renderFeeds = (feeds) => {
+const renderFeeds = (feeds, i18nextInstance) => {
   const feedsContainerEl = document.querySelector('.feeds');
-  const headerEl = createHeader(i18next.t('headers.feedsHeader'));
+  const headerEl = createHeader(i18nextInstance.t('headers.feedsHeader'));
   const feedsListEl = createList(feeds, createFeedsListItemEl);
 
   feedsContainerEl.innerHTML = '';
@@ -30,9 +29,9 @@ const renderFeeds = (feeds) => {
   feedsContainerEl.append(feedsListEl);
 };
 
-const watchFeedsState = (feeds) => {
+const watchFeedsState = (feeds, i18nextInstance) => {
   const watchedFeeds = onChange(feeds, (_, value) => {
-    renderFeeds(value);
+    renderFeeds(value, i18nextInstance);
   });
   return watchedFeeds;
 };
