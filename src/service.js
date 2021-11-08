@@ -60,16 +60,17 @@ const getFeedData = (feedUrl) => axios
     throw new Error('errors.networkError');
   })
   .then((feedResponse) => {
-    const parser = new DOMParser();
-    const feedXML = parser.parseFromString(
-      feedResponse?.data?.contents,
-      'application/xml',
-    );
-    const feedData = parseFeedXml(feedXML);
-    return mapFeedData(feedData, feedUrl);
-  })
-  .catch(() => {
-    throw new Error('errors.parseError');
+    try {
+      const parser = new DOMParser();
+      const feedXML = parser.parseFromString(
+        feedResponse?.data?.contents,
+        'application/xml',
+      );
+      const feedData = parseFeedXml(feedXML);
+      return mapFeedData(feedData, feedUrl);
+    } catch (_) {
+      throw new Error('errors.parseError');
+    }
   });
 
 export default getFeedData;
