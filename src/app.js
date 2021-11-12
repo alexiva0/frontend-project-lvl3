@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { watchFormState, watchFeedsState, watchPostsState } from './views';
+import watchState from './view';
 import getFeedData from './service';
 
 import { FORM_STATES } from './helpers/constants';
@@ -43,8 +43,8 @@ const getPostById = (posts, postId) => posts.find(({ id }) => id === Number(post
 const app = (i18nextInstance) => {
   const state = {
     feeds: [],
-    posts: {
-      list: [],
+    posts: [],
+    modal: {
       currentPost: null,
     },
     form: {
@@ -53,35 +53,33 @@ const app = (i18nextInstance) => {
     },
   };
 
-  const watchedFormState = watchFormState(state.form, i18nextInstance);
-  const watchedFeeds = watchFeedsState(state.feeds, i18nextInstance);
-  const watchedPosts = watchPostsState(state.posts, i18nextInstance);
+  const watchedState = watchState(state, i18nextInstance);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    watchedFormState.processState = FORM_STATES.sending;
+    watchedState.form.processState = FORM_STATES.sending;
 
-    const schema = createValidationSchema(watchedFeeds);
+    const schema = createValidationSchema(watchedState.feeds);
     const formData = new FormData(e.target);
     const url = formData.get('url').trim();
 
     schema
       .validate({ url })
       .then(() => {
-        watchedFormState.error = null;
+        watchedState.form.error = null;
         return getFeedData(url);
       })
       .then(({ feed, posts }) => {
-        watchedFormState.processState = FORM_STATES.success;
-        watchedFeeds.push(feed);
-        watchedPosts.list.unshift(...posts);
+        watchedState.form.processState = FORM_STATES.success;
+        watchedState.feeds.push(feed);
+        watchedState.posts.unshift(...posts);
 
-        subscribeToNewPosts(url, watchedPosts.list);
+        subscribeToNewPosts(url, watchedState.posts);
       })
       .catch((error) => {
-        watchedFormState.error = error;
-        watchedFormState.processState = FORM_STATES.failed;
+        watchedState.form.error = error;
+        watchedState.form.processState = FORM_STATES.failed;
       });
   };
 
@@ -89,8 +87,8 @@ const app = (i18nextInstance) => {
     const postId = e.relatedTarget?.dataset?.id;
 
     if (postId) {
-      const post = getPostById(watchedPosts.list, postId);
-      watchedPosts.currentPost = post;
+      const post = getPostById(watchedState.posts, postId);
+      watchedState.modal.currentPost = post;
     }
   };
 
@@ -98,7 +96,7 @@ const app = (i18nextInstance) => {
     const postId = e.target.dataset.id;
 
     if (postId) {
-      const post = getPostById(watchedPosts.list, postId);
+      const post = getPostById(watchedState.posts, postId);
       post.visited = true;
     }
   };
