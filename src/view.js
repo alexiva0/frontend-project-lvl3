@@ -171,15 +171,13 @@ const watchState = (state, i18nextInstance) => {
         handleFormStateChange(value, this.form, i18nextInstance);
         break;
 
-      case 'posts':
-        renderPosts(value, i18nextInstance);
-        break;
-
       case 'modal.currentPost':
         updateModalContent(value);
         break;
 
+      // Any other changes should trigger posts rerender
       default:
+        renderPosts(this.posts, i18nextInstance);
         break;
     }
   });
