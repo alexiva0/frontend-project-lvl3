@@ -55,9 +55,6 @@ const mapFeedData = (feedData, feedUrl) => {
 
 const getFeedData = (feedUrl) => axios
   .get(getUrlWithProxy(feedUrl))
-  .catch(() => {
-    throw new Error('errors.networkError');
-  })
   .then((feedResponse) => {
     try {
       const parser = new DOMParser();
@@ -67,8 +64,9 @@ const getFeedData = (feedUrl) => axios
       );
       const feedData = parseFeedXml(feedXML);
       return mapFeedData(feedData, feedUrl);
-    } catch (_) {
-      throw new Error('errors.parseError');
+    } catch (error) {
+      error.isParseError = true;
+      throw error;
     }
   });
 

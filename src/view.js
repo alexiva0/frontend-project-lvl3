@@ -2,12 +2,10 @@ import onChange from 'on-change';
 
 import { FORM_STATES } from './helpers/constants';
 
-const renderErrorMessage = (inputEl, feedbackEl, error, i18nextInstance) => {
-  const errMsg = error?.message ?? 'errors.default';
-
+const renderErrorMessage = (inputEl, feedbackEl, errorMsg, i18nextInstance) => {
   inputEl.classList.add('is-invalid');
   feedbackEl.classList.add('text-danger');
-  feedbackEl.textContent = i18nextInstance.t(errMsg);
+  feedbackEl.textContent = i18nextInstance.t(errorMsg || 'errors.default');
 };
 
 const renderSuccessMessage = (feedbackEl, i18nextInstance) => {
@@ -44,7 +42,7 @@ const handleFormStateChange = (processState, formState, i18nextInstance) => {
       break;
 
     case FORM_STATES.failed:
-      renderErrorMessage(inputEl, feedbackEl, formState.error, i18nextInstance);
+      renderErrorMessage(inputEl, feedbackEl, formState.errorMsg, i18nextInstance);
       submitButtonEl.disabled = false;
       inputEl.readOnly = false;
       inputEl.focus();

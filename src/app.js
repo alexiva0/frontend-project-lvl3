@@ -51,7 +51,7 @@ const app = (i18nextInstance) => {
       currentPost: null,
     },
     form: {
-      error: null,
+      errorMsg: null,
       processState: FORM_STATES.filling,
     },
   };
@@ -70,7 +70,7 @@ const app = (i18nextInstance) => {
     schema
       .validate({ url })
       .then(() => {
-        watchedState.form.error = null;
+        watchedState.form.errorMsg = null;
         return getFeedData(url);
       })
       .then(({ feed, posts }) => {
@@ -81,7 +81,15 @@ const app = (i18nextInstance) => {
         subscribeToNewPosts(url, watchedState.posts.list);
       })
       .catch((error) => {
-        watchedState.form.error = error;
+        let errorMsg = error.message;
+
+        if (error.isAxiosError) {
+          errorMsg = 'errors.networkError';
+        } else if (error.isParseError) {
+          errorMsg = 'errors.parseError';
+        }
+
+        watchedState.form.errorMsg = errorMsg;
         watchedState.form.processState = FORM_STATES.failed;
       });
   };
