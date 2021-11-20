@@ -104,9 +104,10 @@ const renderFeeds = (feeds, i18nextInstance) => {
   feedsContainerEl.append(feedsListEl);
 };
 
-const createPostsListItemGenerator = (i18nextInstance) => ({
-  title, link, id, visited,
+const createPostsListItemGenerator = (visitedPostsIds, i18nextInstance) => ({
+  title, link, id,
 }) => {
+  const visited = visitedPostsIds.includes(id);
   const listItemEl = document.createElement('li');
   listItemEl.classList.add(
     'list-group-item',
@@ -139,10 +140,14 @@ const createPostsListItemGenerator = (i18nextInstance) => ({
   return listItemEl;
 };
 
-const renderPosts = (postsList, i18nextInstance) => {
+const renderPosts = (posts, i18nextInstance) => {
+  const { list: postsList, visitedPostsIds } = posts;
   const postsContainerEl = document.querySelector('.posts');
   const headerEl = createHeader(i18nextInstance.t('headers.postsHeader'));
-  const postsListEl = createList(postsList, createPostsListItemGenerator(i18nextInstance));
+  const postsListEl = createList(
+    postsList,
+    createPostsListItemGenerator(visitedPostsIds, i18nextInstance),
+  );
 
   postsContainerEl.innerHTML = '';
   postsContainerEl.append(headerEl);

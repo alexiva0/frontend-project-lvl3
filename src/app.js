@@ -43,7 +43,10 @@ const getPostById = (posts, postId) => posts.find(({ id }) => id === Number(post
 const app = (i18nextInstance) => {
   const state = {
     feeds: [],
-    posts: [],
+    posts: {
+      list: [],
+      visitedPostsIds: [],
+    },
     modal: {
       currentPost: null,
     },
@@ -73,9 +76,9 @@ const app = (i18nextInstance) => {
       .then(({ feed, posts }) => {
         watchedState.form.processState = FORM_STATES.success;
         watchedState.feeds.push(feed);
-        watchedState.posts.unshift(...posts);
+        watchedState.posts.list.unshift(...posts);
 
-        subscribeToNewPosts(url, watchedState.posts);
+        subscribeToNewPosts(url, watchedState.posts.list);
       })
       .catch((error) => {
         watchedState.form.error = error;
@@ -87,7 +90,7 @@ const app = (i18nextInstance) => {
     const postId = e.relatedTarget?.dataset?.id;
 
     if (postId) {
-      const post = getPostById(watchedState.posts, postId);
+      const post = getPostById(watchedState.posts.list, postId);
       watchedState.modal.currentPost = post;
     }
   };
@@ -96,8 +99,7 @@ const app = (i18nextInstance) => {
     const postId = e.target.dataset.id;
 
     if (postId) {
-      const post = getPostById(watchedState.posts, postId);
-      post.visited = true;
+      watchedState.posts.visitedPostsIds.push(Number(postId));
     }
   };
 
