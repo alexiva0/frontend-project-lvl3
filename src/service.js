@@ -56,18 +56,21 @@ const mapFeedData = (feedData, feedUrl) => {
 const getFeedData = (feedUrl) => axios
   .get(getUrlWithProxy(feedUrl))
   .then((feedResponse) => {
-    try {
-      const parser = new DOMParser();
-      const feedXML = parser.parseFromString(
-        feedResponse?.data?.contents,
-        'application/xml',
-      );
-      const feedData = parseFeedXml(feedXML);
-      return mapFeedData(feedData, feedUrl);
-    } catch (error) {
+    const parser = new DOMParser();
+    const feedXML = parser.parseFromString(
+      feedResponse?.data?.contents,
+      'application/xml',
+    );
+
+    const parseError = feedXML.querySelector('parsererror');
+    if (parseError) {
+      const error = new Error(parseError.textContent);
       error.isParseError = true;
       throw error;
     }
+
+    const feedData = parseFeedXml(feedXML);
+    return mapFeedData(feedData, feedUrl);
   });
 
 export default getFeedData;
